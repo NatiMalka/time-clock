@@ -109,9 +109,9 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
                             <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-sm font-medium text-gray-900">
-                                  {log.type === 'clock-in' ? 'Clocked In' : 'Clocked Out'}
+                                  {log.type === 'clock-in' ? t('clockedIn') : t('clockedOut')}
                                 </p>
-                                <p className="text-sm text-gray-500">{log.location}</p>
+                                <p className="text-sm text-gray-500">{t('mainOffice')}</p>
                               </div>
                               <div className="flex items-center space-x-4">
                                 <p className="text-sm text-gray-500">{time}</p>
@@ -120,7 +120,7 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
                                   whileTap={{ scale: 0.95 }}
                                   onClick={() => handleDelete(log.id)}
                                   className="text-gray-400 hover:text-rose-600 transition-colors"
-                                  title="Delete entry"
+                                  title={t('deleteEntry')}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </motion.button>
