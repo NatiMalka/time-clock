@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Skeleton } from './ui/Skeleton';
 import { Tooltip } from './ui/Tooltip';
+import { Animate } from './ui/Animate';
 
 interface AttendanceLogProps {
   logs: TimeLog[];
@@ -125,29 +126,32 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      {dateLogs.map((log) => {
+                      {dateLogs.map((log, index) => {
                         const { time } = formatDateTime(new Date(log.timestamp));
                         return (
-                          <motion.li
+                          <Animate
                             key={log.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
+                            type="slideUp"
+                            delay={index * 0.1}
                             className="px-4 py-4 hover:bg-gray-50 transition-colors"
                           >
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-sm font-medium text-gray-900">
+                                <motion.p 
+                                  className="text-sm font-medium text-gray-900"
+                                  whileHover={{ x: 5 }}
+                                  transition={{ type: "spring", stiffness: 300 }}
+                                >
                                   {log.type === 'clock-in' ? t('clockedIn') : t('clockedOut')}
-                                </p>
+                                </motion.p>
                                 <p className="text-sm text-gray-500">{t('mainOffice')}</p>
                               </div>
                               <div className="flex items-center space-x-4">
                                 <p className="text-sm text-gray-500">{time}</p>
                                 <Tooltip content={t('deleteEntryTooltip')}>
                                   <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    whileHover={{ scale: 1.1, rotate: 10 }}
+                                    whileTap={{ scale: 0.95, rotate: 0 }}
                                     onClick={() => handleDelete(log.id)}
                                     className="text-gray-400 hover:text-rose-600 transition-colors"
                                   >
@@ -156,7 +160,7 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                                 </Tooltip>
                               </div>
                             </div>
-                          </motion.li>
+                          </Animate>
                         );
                       })}
                     </motion.ul>

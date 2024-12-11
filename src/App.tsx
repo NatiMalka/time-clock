@@ -8,6 +8,8 @@ import { Button } from './components/ui/Button';
 import { loadLogs, saveLogs } from './utils/storageUtils';
 import { useLanguage } from './contexts/LanguageContext';
 import { Tooltip } from './components/ui/Tooltip';
+import ReactDOM from 'react-dom/client';
+import { Animate } from './components/ui/Animate';
 
 function App() {
   const [logs, setLogs] = React.useState<TimeLog[]>(() => loadLogs());
@@ -53,6 +55,26 @@ function App() {
       timestamp: new Date(),
       location: 'Main Office'
     };
+    
+    // Show success animation
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-4 right-4 z-50';
+    document.body.appendChild(toast);
+    
+    const root = ReactDOM.createRoot(toast);
+    root.render(
+      <Animate type="slideDown">
+        <div className="bg-green-500/90 text-white px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm">
+          {t(type === 'clock-in' ? 'clockedInSuccess' : 'clockedOutSuccess')}
+        </div>
+      </Animate>
+    );
+
+    setTimeout(() => {
+      root.unmount();
+      document.body.removeChild(toast);
+    }, 3000);
+
     const updatedLogs = [newLog, ...logs];
     setLogs(updatedLogs);
     saveLogs(updatedLogs);
