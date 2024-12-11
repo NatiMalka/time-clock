@@ -13,6 +13,7 @@ function App() {
   const [view, setView] = React.useState<'clock' | 'reports'>('clock');
   const [loadError, setLoadError] = React.useState<string | null>(null);
   const { t, language } = useLanguage();
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const handleError = (event: ErrorEvent) => {
@@ -24,6 +25,23 @@ function App() {
 
     window.addEventListener('error', handleError);
     return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  React.useEffect(() => {
+    const loadInitialData = async () => {
+      setIsLoading(true);
+      try {
+        const loadedLogs = loadLogs();
+        setLogs(loadedLogs);
+      } catch (error) {
+        console.error('Error loading logs:', error);
+        setLoadError('Failed to load attendance data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInitialData();
   }, []);
 
   const handleClock = (type: 'clock-in' | 'clock-out') => {
@@ -106,6 +124,7 @@ function App() {
               <AttendanceLog 
                 logs={logs} 
                 onDelete={handleDeleteLog}
+                isLoading={isLoading}
               />
             </div>
           </div>
@@ -114,6 +133,7 @@ function App() {
             logs={logs} 
             onUpdateLog={handleUpdateLog} 
             onDeleteLog={handleDeleteLog}
+            isLoading={isLoading}
           />
         )}
       </main>

@@ -4,13 +4,15 @@ import { Trash2, ChevronRight } from 'lucide-react';
 import { ConfirmDialog } from './ui/ConfirmDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Skeleton } from './ui/Skeleton';
 
 interface AttendanceLogProps {
   logs: TimeLog[];
   onDelete: (logId: string) => void;
+  isLoading?: boolean;
 }
 
-export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
+export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceLogProps) {
   const { t, language } = useLanguage();
   const [deleteLogId, setDeleteLogId] = React.useState<string | null>(null);
   const [expandedDate, setExpandedDate] = React.useState<string | null>(null);
@@ -50,6 +52,32 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
     groups[date].push(log);
     return groups;
   }, {} as Record<string, TimeLog[]>);
+
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="px-4 py-5 sm:px-6">
+          <Skeleton className="h-7 w-48" />
+        </div>
+        <div className="divide-y divide-gray-200">
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-3">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-4 w-4" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
