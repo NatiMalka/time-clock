@@ -63,12 +63,12 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gray-50 dark:bg-dark-900 transition-colors duration-300" dir={language === 'he' ? 'rtl' : 'ltr'}>
       <Header />
       
       {loadError && (
         <div className="max-w-7xl mx-auto px-4 py-2">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-sm text-yellow-800">
+          <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-md p-3 text-sm text-yellow-800 dark:text-yellow-200">
             {loadError}
           </div>
         </div>
@@ -93,7 +93,7 @@ function App() {
         {view === 'clock' ? (
           <div className="flex flex-col items-center space-y-8 max-w-4xl mx-auto">
             <div className="w-full text-center">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-8">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-dark-50 mb-8">
                 {t('todayAttendance')}
               </h2>
               <div className={`flex justify-center ${language === 'he' ? 'gap-8' : 'space-x-8'} mb-12`}>
