@@ -10,6 +10,8 @@ import { useLanguage } from './contexts/LanguageContext';
 import { Tooltip } from './components/ui/Tooltip';
 import ReactDOM from 'react-dom/client';
 import { Animate } from './components/ui/Animate';
+import { calculateOvertime, OVERTIME_WARNING_THRESHOLD, STANDARD_HOURS_PER_DAY } from './utils/attendanceUtils';
+import { AlertTriangle } from 'lucide-react';
 
 function App() {
   const [logs, setLogs] = React.useState<TimeLog[]>(() => loadLogs());
@@ -56,6 +58,31 @@ function App() {
       location: 'Main Office'
     };
     
+    // Show overtime warning if needed
+    if (type === 'clock-out') {
+      const { dailyOvertime } = calculateOvertime([...logs, newLog]);
+      if (dailyOvertime > OVERTIME_WARNING_THRESHOLD - STANDARD_HOURS_PER_DAY) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 z-50';
+        document.body.appendChild(toast);
+        
+        const root = ReactDOM.createRoot(toast);
+        root.render(
+          <Animate type="slideDown">
+            <div className="bg-orange-500/90 text-white px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              {t('overtimeWarning')}
+            </div>
+          </Animate>
+        );
+
+        setTimeout(() => {
+          root.unmount();
+          document.body.removeChild(toast);
+        }, 5000);
+      }
+    }
+
     // Show success animation
     const toast = document.createElement('div');
     toast.className = 'fixed top-4 right-4 z-50';
@@ -117,7 +144,7 @@ function App() {
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-center gap-4">
-          <Tooltip content={t('clockViewTooltip', 'Clock in/out and view recent activity')}>
+          <Tooltip content={t('clockViewTooltip')}>
             <Button
               onClick={() => setView('clock')}
               variant={view === 'clock' ? 'primary' : 'outline'}
@@ -125,7 +152,7 @@ function App() {
               {t('clockInOut')}
             </Button>
           </Tooltip>
-          <Tooltip content={t('reportsViewTooltip', 'View attendance reports and statistics')}>
+          <Tooltip content={t('reportsViewTooltip')}>
             <Button
               onClick={() => setView('reports')}
               variant={view === 'reports' ? 'primary' : 'outline'}

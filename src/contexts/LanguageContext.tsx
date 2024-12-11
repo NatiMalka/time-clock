@@ -108,7 +108,7 @@ export const translations: Translations = {
   },
   clockOutMessage: {
     en: 'Are you sure you want to clock out? This will record your attendance end time.',
-    he: 'האם אתה בטוח שברצונך לדווח יציאה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
+    he: 'האם אתה בטוח שברצונך לדווח יצי��ה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
   },
   clockInTooltip: {
     en: 'Record your arrival time',
@@ -129,6 +129,42 @@ export const translations: Translations = {
   reportsViewTooltip: {
     en: 'View attendance reports and statistics',
     he: 'צפייה בדוחות נוכחות וסטטיסטיקות'
+  },
+  overtime: {
+    en: 'Overtime',
+    he: 'שעות נוספות'
+  },
+  dailyOvertime: {
+    en: 'Today\'s Overtime',
+    he: 'שעות נוספות היום'
+  },
+  weeklyOvertime: {
+    en: 'Weekly Overtime',
+    he: 'שעות נוספות שבועיות'
+  },
+  monthlyOvertime: {
+    en: 'Monthly Overtime',
+    he: 'שעות נוספות חודשיות'
+  },
+  overtimeWarning: {
+    en: 'You have worked more than 8.48 hours today. Additional hours will be counted as overtime.',
+    he: 'עבדת יותר מ-8.48 שעות היום. שעות נוספות יחושבו כשעות נוספות.'
+  },
+  standardWorkday: {
+    en: 'Standard workday: 8.48 hours',
+    he: 'יום עבודה רגיל: 8.48 שעות'
+  },
+  workingHours: {
+    en: 'Working Hours',
+    he: 'שעות עבודה'
+  },
+  today: {
+    en: 'Today',
+    he: 'היום'
+  },
+  overtime: {
+    en: 'overtime',
+    he: 'שעות נוספות'
   }
 };
 
