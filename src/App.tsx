@@ -6,11 +6,13 @@ import { ReportsView } from './components/reports/ReportsView';
 import { TimeLog } from './types';
 import { Button } from './components/ui/Button';
 import { loadLogs, saveLogs } from './utils/storageUtils';
+import { useLanguage } from './contexts/LanguageContext';
 
 function App() {
   const [logs, setLogs] = React.useState<TimeLog[]>(() => loadLogs());
   const [view, setView] = React.useState<'clock' | 'reports'>('clock');
   const [loadError, setLoadError] = React.useState<string | null>(null);
+  const { t, language } = useLanguage();
 
   React.useEffect(() => {
     const handleError = (event: ErrorEvent) => {
@@ -61,7 +63,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" dir={language === 'he' ? 'rtl' : 'ltr'}>
       <Header />
       
       {loadError && (
@@ -73,26 +75,28 @@ function App() {
       )}
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 flex justify-center space-x-4">
+        <div className="mb-8 flex justify-center gap-4">
           <Button
             onClick={() => setView('clock')}
             variant={view === 'clock' ? 'primary' : 'outline'}
           >
-            Clock In/Out
+            {t('clockInOut')}
           </Button>
           <Button
             onClick={() => setView('reports')}
             variant={view === 'reports' ? 'primary' : 'outline'}
           >
-            Reports
+            {t('reports')}
           </Button>
         </div>
 
         {view === 'clock' ? (
           <div className="flex flex-col items-center space-y-8 max-w-4xl mx-auto">
             <div className="w-full text-center">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-8">Today's Attendance</h2>
-              <div className="flex justify-center space-x-8 mb-12">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-8">
+                {t('todayAttendance')}
+              </h2>
+              <div className={`flex justify-center ${language === 'he' ? 'gap-8' : 'space-x-8'} mb-12`}>
                 <ClockButton type="in" onClick={() => handleClock('clock-in')} />
                 <ClockButton type="out" onClick={() => handleClock('clock-out')} />
               </div>

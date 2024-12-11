@@ -4,7 +4,9 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-rtl'),
+  ],
   safelist: [
     'bg-indigo-600',
     'bg-rose-600',

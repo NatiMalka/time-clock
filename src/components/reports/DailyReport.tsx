@@ -4,8 +4,9 @@ import { calculateDailyStats } from '../../utils/attendanceUtils';
 import { formatDate } from '../../utils/dateUtils';
 import { Card, CardHeader, CardContent } from '../ui/Card';
 import { DateTimeEditor } from './DateTimeEditor';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface DailyReportProps {
   logs: TimeLog[];
@@ -13,7 +14,8 @@ interface DailyReportProps {
   onDeleteLog: (logId: string) => void;
 }
 
-export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps) {
+export function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
+  const { t, language } = useLanguage();
   const [editingLog, setEditingLog] = React.useState<{
     date: Date;
     type: 'clock-in' | 'clock-out';
@@ -24,14 +26,14 @@ export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps
   return (
     <Card>
       <CardHeader>
-        <h3 className="text-lg font-medium text-gray-900">Daily Reports</h3>
+        <h3 className="text-lg font-medium text-gray-900">{t('dailyReports')}</h3>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
           {dailyStats.map((day) => (
             <div key={day.date.toISOString()} className="space-y-2">
               <h4 className="font-medium text-gray-700">
-                {day.date.toLocaleDateString('en-US', {
+                {day.date.toLocaleDateString(language === 'he' ? 'he-IL' : 'en-US', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -42,7 +44,7 @@ export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps
                 <div className="relative">
                   <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div>
-                      <p className="text-sm text-gray-500">Clock In</p>
+                      <p className="text-sm text-gray-500">{t('clockIn')}</p>
                       <p className="text-lg font-medium">
                         {day.clockIn ? formatDate(day.clockIn) : '-'}
                       </p>
@@ -83,7 +85,7 @@ export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps
                 <div className="relative">
                   <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div>
-                      <p className="text-sm text-gray-500">Clock Out</p>
+                      <p className="text-sm text-gray-500">{t('clockOut')}</p>
                       <p className="text-lg font-medium">
                         {day.clockOut ? formatDate(day.clockOut) : '-'}
                       </p>
@@ -122,7 +124,7 @@ export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps
                 </div>
               </div>
               <p className="text-sm text-gray-500">
-                Total Hours: {day.hoursWorked.toFixed(1)}
+                {t('totalHours')}: {day.hoursWorked.toFixed(1)}
               </p>
             </div>
           ))}

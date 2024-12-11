@@ -1,63 +1,63 @@
 import React from 'react';
-import { BarChart, Clock, UserCheck } from 'lucide-react';
 import { TimeLog } from '../../types';
-import { calculateDailyStats } from '../../utils/attendanceUtils';
-import { Card, CardContent } from '../ui/Card';
+import { Clock, BarChart2, Users } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-interface StatCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  trend?: string;
+interface AttendanceStatsProps {
+  logs: TimeLog[];
 }
 
-function StatCard({ icon, label, value, trend }: StatCardProps) {
-  return (
-    <Card>
-      <CardContent>
-        <div className="flex items-center">
-          <div className="p-2 bg-indigo-50 rounded-lg">
-            {icon}
-          </div>
-          <div className="ml-4 flex-1">
-            <p className="text-sm font-medium text-gray-500">{label}</p>
-            <div className="flex items-baseline">
-              <p className="text-2xl font-semibold text-gray-900">{value}</p>
-              {trend && (
-                <span className="ml-2 text-sm text-green-500">{trend}</span>
-              )}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function AttendanceStats({ logs }: { logs: TimeLog[] }) {
-  const dailyStats = calculateDailyStats(logs);
+export function AttendanceStats({ logs }: AttendanceStatsProps) {
+  const { t } = useLanguage();
   
-  const totalHours = dailyStats.reduce((sum, day) => sum + day.hoursWorked, 0);
-  const averageHours = dailyStats.length > 0 ? totalHours / dailyStats.length : 0;
-  const daysPresent = dailyStats.filter(day => day.hoursWorked > 0).length;
+  const totalHours = logs.reduce((total, log) => {
+    const clockInLogs = logs.filter(l => l.type === 'clock-in');
+    const clockOutLogs = logs.filter(l => l.type === 'clock-out');
+    
+    let hours = 0;
+    clockInLogs.forEach(clockIn => {
+      const clockOut = clockOutLogs.find(out => 
+        new Date(out.timestamp).toDateString() === new Date(clockIn.timestamp).toDateString()
+      );
+      if (clockOut) {
+        hours += (new Date(clockOut.timestamp).getTime() - new Date(clockIn.timestamp).getTime()) / (1000 * 60 * 60);
+      }
+    });
+    
+    return hours;
+  }, 0);
+
+  const uniqueDays = new Set(logs.map(log => 
+    new Date(log.timestamp).toDateString()
+  )).size;
+
+  const averageHours = uniqueDays > 0 ? totalHours / uniqueDays : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <StatCard
-        icon={<Clock className="h-6 w-6 text-indigo-600" />}
-        label="Total Hours"
-        value={totalHours.toFixed(1)}
-      />
-      <StatCard
-        icon={<BarChart className="h-6 w-6 text-indigo-600" />}
-        label="Average Hours/Day"
-        value={averageHours.toFixed(1)}
-      />
-      <StatCard
-        icon={<UserCheck className="h-6 w-6 text-indigo-600" />}
-        label="Days Present"
-        value={daysPresent.toString()}
-      />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center gap-3">
+          <Clock className="h-6 w-6 text-indigo-600" />
+          <h3 className="text-lg font-medium text-gray-900">{t('totalHours')}</h3>
+        </div>
+        <p className="mt-2 text-3xl font-bold">{totalHours.toFixed(1)}</p>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center gap-3">
+          <BarChart2 className="h-6 w-6 text-indigo-600" />
+          <h3 className="text-lg font-medium text-gray-900">{t('averageHoursDay')}</h3>
+        </div>
+        <p className="mt-2 text-3xl font-bold">{averageHours.toFixed(1)}</p>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center gap-3">
+          <Users className="h-6 w-6 text-indigo-600" />
+          <h3 className="text-lg font-medium text-gray-900">{t('daysPresent')}</h3>
+        </div>
+        <p className="mt-2 text-3xl font-bold">{uniqueDays}</p>
+      </div>
     </div>
   );
 }

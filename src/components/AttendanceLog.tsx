@@ -3,6 +3,7 @@ import { TimeLog } from '../types';
 import { Trash2, ChevronRight } from 'lucide-react';
 import { ConfirmDialog } from './ui/ConfirmDialog';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AttendanceLogProps {
   logs: TimeLog[];
@@ -10,6 +11,7 @@ interface AttendanceLogProps {
 }
 
 export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
+  const { t, language } = useLanguage();
   const [deleteLogId, setDeleteLogId] = React.useState<string | null>(null);
   const [expandedDate, setExpandedDate] = React.useState<string | null>(null);
 
@@ -53,7 +55,7 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
     <>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
+          <h3 className="text-lg font-medium text-gray-900">{t('recentActivity')}</h3>
         </div>
         <AnimatePresence>
           <div className="divide-y divide-gray-200">
@@ -71,7 +73,7 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
                   className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between group"
                 >
                   <h4 className="text-sm font-medium text-gray-500">
-                    {new Date(date).toLocaleDateString('en-US', {
+                    {new Date(date).toLocaleDateString(language === 'he' ? 'he-IL' : 'en-US', {
                       weekday: 'long',
                       year: 'numeric',
                       month: 'long',
@@ -140,8 +142,8 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
         isOpen={deleteLogId !== null}
         onClose={() => setDeleteLogId(null)}
         onConfirm={handleConfirmDelete}
-        title="Delete Entry"
-        message="Are you sure you want to delete this attendance record? This action cannot be undone."
+        title={t('deleteEntry')}
+        message={t('deleteConfirmation')}
       />
     </>
   );

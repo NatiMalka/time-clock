@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, Clock } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface DateTimeEditorProps {
   value: Date;
@@ -8,6 +9,7 @@ interface DateTimeEditorProps {
 }
 
 export function DateTimeEditor({ value, onChange, onClose }: DateTimeEditorProps) {
+  const { t } = useLanguage();
   const [date, setDate] = React.useState(value.toISOString().split('T')[0]);
   const [time, setTime] = React.useState(
     value.toTimeString().split(':').slice(0, 2).join(':')
@@ -25,7 +27,7 @@ export function DateTimeEditor({ value, onChange, onClose }: DateTimeEditorProps
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
             <Calendar className="w-4 h-4" />
-            Date
+            {t('date')}
           </label>
           <input
             type="date"
@@ -38,7 +40,7 @@ export function DateTimeEditor({ value, onChange, onClose }: DateTimeEditorProps
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
             <Clock className="w-4 h-4" />
-            Time
+            {t('time')}
           </label>
           <input
             type="time"
@@ -49,17 +51,11 @@ export function DateTimeEditor({ value, onChange, onClose }: DateTimeEditorProps
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <button
-            onClick={onClose}
-            className="px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-          >
-            Cancel
+          <button onClick={onClose}>
+            {t('cancel')}
           </button>
-          <button
-            onClick={handleSave}
-            className="px-3 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors"
-          >
-            Save
+          <button onClick={handleSave}>
+            {t('save')}
           </button>
         </div>
       </div>

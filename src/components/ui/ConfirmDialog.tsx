@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Button } from './Button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -12,6 +13,8 @@ interface ConfirmDialogProps {
 }
 
 export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message }: ConfirmDialogProps) {
+  const { t } = useLanguage();
+  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -46,7 +49,7 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message }: Co
             
             <div className="flex justify-end gap-3">
               <Button variant="outline" onClick={onClose}>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -56,7 +59,7 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message }: Co
                 }}
                 className="bg-rose-600 hover:bg-rose-700"
               >
-                Delete
+                {t('delete')}
               </Button>
             </div>
           </motion.div>

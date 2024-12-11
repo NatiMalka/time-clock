@@ -1,6 +1,7 @@
 import React from 'react';
 import { Timer } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ClockButtonProps {
   type: 'in' | 'out';
@@ -8,6 +9,7 @@ interface ClockButtonProps {
 }
 
 export function ClockButton({ type, onClick }: ClockButtonProps) {
+  const { t } = useLanguage();
   const bgColor = type === 'in' ? 'bg-indigo-600' : 'bg-rose-600';
   const hoverColor = type === 'in' ? 'hover:bg-indigo-700' : 'hover:bg-rose-700';
 
@@ -26,7 +28,9 @@ export function ClockButton({ type, onClick }: ClockButtonProps) {
       />
       <motion.div className="relative flex flex-col items-center">
         <Timer className="w-12 h-12 mb-2" />
-        <span className="text-xl font-semibold">Clock {type.toUpperCase()}</span>
+        <span className="text-xl font-semibold">
+          {t(type === 'in' ? 'clockIn' : 'clockOut')}
+        </span>
       </motion.div>
     </motion.button>
   );

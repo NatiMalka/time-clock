@@ -2,6 +2,7 @@ import React from 'react';
 import { TimeLog } from '../../types';
 import { AttendanceStats } from './AttendanceStats';
 import { DailyReport } from './DailyReport';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ReportsViewProps {
   logs: TimeLog[];
@@ -10,6 +11,8 @@ interface ReportsViewProps {
 }
 
 export function ReportsView({ logs, onUpdateLog, onDeleteLog }: ReportsViewProps) {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-8">
       <AttendanceStats logs={logs} />
