@@ -13,52 +13,45 @@ export function ClockButton({ type, onClick }: ClockButtonProps) {
   const { t } = useLanguage();
   const [showConfirm, setShowConfirm] = React.useState(false);
   
-  const bgColor = type === 'in' ? 'bg-indigo-600/90' : 'bg-rose-600/90';
-  const hoverColor = type === 'in' ? 'hover:bg-indigo-700/95' : 'hover:bg-rose-700/95';
-  const glowColor = type === 'in' ? 'shadow-indigo-500/50' : 'shadow-rose-500/50';
-
+  const baseColor = type === 'in' ? 'indigo' : 'rose';
+  
   return (
     <>
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.05, y: -5 }}
+        whileTap={{ scale: 0.95, y: 0 }}
         onClick={() => setShowConfirm(true)}
         className={`
-          ${bgColor} 
-          ${hoverColor} 
           relative w-48 h-48 
           rounded-full 
           flex flex-col items-center justify-center 
           text-white 
-          transition-all duration-300
-          backdrop-blur-sm
-          shadow-[0_8px_30px_rgb(0,0,0,0.12)]
-          ${glowColor}
-          before:absolute
-          before:inset-0
-          before:rounded-full
-          before:bg-gradient-to-b
-          before:from-white/10
-          before:to-transparent
-          before:backdrop-blur-sm
           overflow-hidden
+          transition-all duration-300
+          bg-${baseColor}-600 dark:bg-${baseColor}-500
+          shadow-lg shadow-${baseColor}-500/30
+          hover:shadow-xl hover:shadow-${baseColor}-500/40
+          before:absolute before:inset-0 
+          before:bg-${baseColor}-700/90 dark:before:bg-${baseColor}-400/90
+          before:rounded-full before:opacity-0
+          before:scale-0 hover:before:scale-100
+          hover:before:opacity-90
+          before:transition-all before:duration-300
+          after:absolute after:inset-0
+          after:bg-gradient-to-r 
+          after:from-transparent after:via-white/20 after:to-transparent
+          after:translate-x-[-150%] after:skew-x-[-25deg]
+          hover:after:translate-x-[150%]
+          after:transition-transform after:duration-700
+          after:ease-out
         `}
       >
-        <motion.div
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 rounded-full border-4 border-white/10"
-        />
-        
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-50" />
-        
-        <motion.div className="relative flex flex-col items-center">
+        <div className="relative z-10 flex flex-col items-center">
           <Timer className="w-12 h-12 mb-2" />
           <span className="text-xl font-semibold">
             {t(type === 'in' ? 'clockIn' : 'clockOut')}
           </span>
-        </motion.div>
+        </div>
       </motion.button>
 
       <ClockConfirmDialog
