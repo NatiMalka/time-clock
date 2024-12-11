@@ -15,5 +15,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['lucide-react']
-  }
+  },
+  base: '/attendance-clock/'
 });
