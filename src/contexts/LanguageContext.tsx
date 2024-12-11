@@ -108,7 +108,27 @@ export const translations: Translations = {
   },
   clockOutMessage: {
     en: 'Are you sure you want to clock out? This will record your attendance end time.',
-    he: 'האם אתה בטוח שברצונך לדווח יציאה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
+    he: 'האם אתה בטוח שברצונך לדווח יצי��ה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
+  },
+  clockInTooltip: {
+    en: 'Record your arrival time',
+    he: 'רישום זמן הגעה'
+  },
+  clockOutTooltip: {
+    en: 'Record your departure time',
+    he: 'רישום זמן עזיבה'
+  },
+  deleteEntryTooltip: {
+    en: 'Delete this time entry',
+    he: 'מחק רשומת זמן זו'
+  },
+  clockViewTooltip: {
+    en: 'Clock in/out and view recent activity',
+    he: 'כניסה/יציאה וצפייה בפעילות אחרונה'
+  },
+  reportsViewTooltip: {
+    en: 'View attendance reports and statistics',
+    he: 'צפייה בדוחות נוכחות וסטטיסטיקות'
   }
 };
 

@@ -5,6 +5,7 @@ import { ConfirmDialog } from './ui/ConfirmDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Skeleton } from './ui/Skeleton';
+import { Tooltip } from './ui/Tooltip';
 
 interface AttendanceLogProps {
   logs: TimeLog[];
@@ -143,15 +144,16 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                               </div>
                               <div className="flex items-center space-x-4">
                                 <p className="text-sm text-gray-500">{time}</p>
-                                <motion.button
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={() => handleDelete(log.id)}
-                                  className="text-gray-400 hover:text-rose-600 transition-colors"
-                                  title={t('deleteEntry')}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </motion.button>
+                                <Tooltip content={t('deleteEntryTooltip', 'Delete this time entry')}>
+                                  <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => handleDelete(log.id)}
+                                    className="text-gray-400 hover:text-rose-600 transition-colors"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </motion.button>
+                                </Tooltip>
                               </div>
                             </div>
                           </motion.li>

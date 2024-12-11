@@ -7,6 +7,7 @@ import { TimeLog } from './types';
 import { Button } from './components/ui/Button';
 import { loadLogs, saveLogs } from './utils/storageUtils';
 import { useLanguage } from './contexts/LanguageContext';
+import { Tooltip } from './components/ui/Tooltip';
 
 function App() {
   const [logs, setLogs] = React.useState<TimeLog[]>(() => loadLogs());
@@ -94,18 +95,22 @@ function App() {
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex justify-center gap-4">
-          <Button
-            onClick={() => setView('clock')}
-            variant={view === 'clock' ? 'primary' : 'outline'}
-          >
-            {t('clockInOut')}
-          </Button>
-          <Button
-            onClick={() => setView('reports')}
-            variant={view === 'reports' ? 'primary' : 'outline'}
-          >
-            {t('reports')}
-          </Button>
+          <Tooltip content={t('clockViewTooltip', 'Clock in/out and view recent activity')}>
+            <Button
+              onClick={() => setView('clock')}
+              variant={view === 'clock' ? 'primary' : 'outline'}
+            >
+              {t('clockInOut')}
+            </Button>
+          </Tooltip>
+          <Tooltip content={t('reportsViewTooltip', 'View attendance reports and statistics')}>
+            <Button
+              onClick={() => setView('reports')}
+              variant={view === 'reports' ? 'primary' : 'outline'}
+            >
+              {t('reports')}
+            </Button>
+          </Tooltip>
         </div>
 
         {view === 'clock' ? (
