@@ -185,13 +185,41 @@ export const translations: Translations = {
   exportError: {
     en: 'Failed to export report',
     he: 'ייצוא הדוח נכשל'
+  },
+  dailyProgress: {
+    en: 'Daily Progress',
+    he: 'התקדמות יומית'
+  },
+  remaining: {
+    en: 'Remaining',
+    he: 'נותרו'
+  },
+  estimatedEnd: {
+    en: 'Estimated End',
+    he: 'סיום משוער'
+  },
+  hoursDeficitMessage: {
+    en: 'Missing {{hours}} hours from standard workday',
+    he: 'חסרות {{hours}} שעות מיום העבודה התקני'
+  },
+  hoursCompleted: {
+    en: 'Completed standard working hours',
+    he: 'הושלמו שעות העבודה התקניות'
+  },
+  totalDeficitSummary: {
+    en: 'Hours to Complete Summary',
+    he: 'סיכום שעות להשלמה'
+  },
+  totalHoursToComplete: {
+    en: 'Total hours you need to complete',
+    he: 'סך שעות שעליך להשלים'
   }
 };
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 export const LanguageContext = React.createContext<LanguageContextType>({
@@ -203,8 +231,16 @@ export const LanguageContext = React.createContext<LanguageContextType>({
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = React.useState<Language>('en');
 
-  const t = (key: string): string => {
-    return translations[key]?.[language] || key;
+  const t = (key: string, params?: Record<string, string | number>): string => {
+    let text = translations[key]?.[language] || key;
+    
+    if (params) {
+      Object.entries(params).forEach(([param, value]) => {
+        text = text.replace(`{{${param}}}`, String(value));
+      });
+    }
+    
+    return text;
   };
 
   return (

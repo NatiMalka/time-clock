@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom/client';
 import { Animate } from './components/ui/Animate';
 import { calculateOvertime, OVERTIME_WARNING_THRESHOLD, STANDARD_HOURS_PER_DAY } from './utils/attendanceUtils';
 import { AlertTriangle } from 'lucide-react';
+import { ProgressBar } from './components/ProgressBar';
 
 function App() {
   const [logs, setLogs] = React.useState<TimeLog[]>(() => loadLogs());
@@ -130,6 +131,28 @@ function App() {
     }
   };
 
+  // Calculate today's working hours
+  const calculateTodayProgress = () => {
+    const today = new Date().toDateString();
+    const todayLogs = logs.filter(log => new Date(log.timestamp).toDateString() === today);
+    const clockIn = todayLogs.find(log => log.type === 'clock-in')?.timestamp;
+    
+    if (!clockIn) return null;
+
+    const clockOut = todayLogs.find(log => log.type === 'clock-out')?.timestamp;
+    const currentTime = clockOut || new Date();
+    
+    const hoursWorked = (currentTime.getTime() - clockIn.getTime()) / (1000 * 60 * 60);
+    const progressPercentage = Math.min((hoursWorked / 9) * 100, 100);
+    
+    return {
+      hoursWorked,
+      progressPercentage,
+      remainingHours: Math.max(9 - hoursWorked, 0),
+      estimatedEndTime: new Date(clockIn.getTime() + (9 * 60 * 60 * 1000))
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900 transition-colors duration-300" dir={language === 'he' ? 'rtl' : 'ltr'}>
       <Header />
@@ -172,6 +195,10 @@ function App() {
                 <ClockButton type="in" onClick={() => handleClock('clock-in')} />
                 <ClockButton type="out" onClick={() => handleClock('clock-out')} />
               </div>
+            </div>
+
+            <div className="w-full max-w-2xl">
+              <ProgressBar progress={calculateTodayProgress()} />
             </div>
             
             <div className="w-full max-w-2xl">
