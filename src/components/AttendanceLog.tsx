@@ -144,7 +144,7 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                               </div>
                               <div className="flex items-center space-x-4">
                                 <p className="text-sm text-gray-500">{time}</p>
-                                <Tooltip content={t('deleteEntryTooltip', 'Delete this time entry')}>
+                                <Tooltip content={t('deleteEntryTooltip')}>
                                   <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}

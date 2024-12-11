@@ -2,7 +2,7 @@ import React from 'react';
 import { TimeLog } from '../../types';
 import { AttendanceStats } from './AttendanceStats';
 import { DailyReport } from './DailyReport';
-import { useLanguage } from '../../contexts/LanguageContext';
+//import { useLanguage } from '../../contexts/LanguageContext';
 import { Skeleton } from '../ui/Skeleton';
 
 interface ReportsViewProps {
@@ -11,10 +11,7 @@ interface ReportsViewProps {
   onDeleteLog: (logId: string) => void;
   isLoading?: boolean;
 }
-
 export function ReportsView({ logs, onUpdateLog, onDeleteLog, isLoading = false }: ReportsViewProps) {
-  const { t } = useLanguage();
-  
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -55,12 +52,11 @@ export function ReportsView({ logs, onUpdateLog, onDeleteLog, isLoading = false 
 
   return (
     <div className="space-y-8">
-      <AttendanceStats logs={logs} isLoading={isLoading} />
+      <AttendanceStats logs={logs} />
       <DailyReport 
         logs={logs} 
         onUpdateLog={onUpdateLog}
         onDeleteLog={onDeleteLog}
-        isLoading={isLoading}
       />
     </div>
   );

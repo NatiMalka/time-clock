@@ -15,10 +15,10 @@ export function Tooltip({
   delay = 0.5 
 }: TooltipProps) {
   const [isVisible, setIsVisible] = React.useState(false);
-  const [timeoutId, setTimeoutId] = React.useState<NodeJS.Timeout>();
+  const [timeoutId, setTimeoutId] = React.useState<number | undefined>();
 
   const handleMouseEnter = () => {
-    const id = setTimeout(() => setIsVisible(true), delay * 1000);
+    const id = window.setTimeout(() => setIsVisible(true), delay * 1000);
     setTimeoutId(id);
   };
 

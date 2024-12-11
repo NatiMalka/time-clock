@@ -14,8 +14,8 @@ interface DailyReportProps {
   onDeleteLog: (logId: string) => void;
 }
 
-export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps) {
-  const { t, language } = useLanguage();
+export function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
+  const { t } = useLanguage();
   const [editingLog, setEditingLog] = React.useState<{
     date: Date;
     type: 'clock-in' | 'clock-out';
@@ -37,7 +37,7 @@ export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps
             <div key={day.date.toISOString()} className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-dark-300">
-                  {formatDate(day.date, 'full')}
+                  {formatDate(day.date)}
                 </h4>
                 <span className="text-sm text-gray-500 dark:text-dark-300">
                   {t('totalHours')}: {day.hoursWorked.toFixed(1)}

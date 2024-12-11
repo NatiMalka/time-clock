@@ -15,10 +15,9 @@ export function ClockButton({ type, onClick }: ClockButtonProps) {
   const [showConfirm, setShowConfirm] = React.useState(false);
   
   const baseColor = type === 'in' ? 'indigo' : 'rose';
-  
   const tooltipContent = type === 'in' 
-    ? t('clockInTooltip', 'Record your arrival time')
-    : t('clockOutTooltip', 'Record your departure time');
+    ? t('clockInTooltip')
+    : t('clockOutTooltip');
 
   return (
     <>
