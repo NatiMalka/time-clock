@@ -10,5 +10,7 @@ export default {
     'bg-rose-600',
     'hover:bg-indigo-700',
     'hover:bg-rose-700',
+    'text-rose-600',
+    'bg-black/50'
   ],
 };

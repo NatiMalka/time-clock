@@ -6,13 +6,18 @@ import { DailyReport } from './DailyReport';
 interface ReportsViewProps {
   logs: TimeLog[];
   onUpdateLog: (date: Date, type: 'clock-in' | 'clock-out', newTime: Date) => void;
+  onDeleteLog: (logId: string) => void;
 }
 
-export function ReportsView({ logs, onUpdateLog }: ReportsViewProps) {
+export function ReportsView({ logs, onUpdateLog, onDeleteLog }: ReportsViewProps) {
   return (
     <div className="space-y-8">
       <AttendanceStats logs={logs} />
-      <DailyReport logs={logs} onUpdateLog={onUpdateLog} />
+      <DailyReport 
+        logs={logs} 
+        onUpdateLog={onUpdateLog}
+        onDeleteLog={onDeleteLog}
+      />
     </div>
   );
 }

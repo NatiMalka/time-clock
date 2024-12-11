@@ -51,6 +51,26 @@ function App() {
     saveLogs(updatedLogs);
   };
 
+  const handleDeleteLog = (logId: string) => {
+    const log = logs.find(l => l.id === logId);
+    if (log) {
+      const formattedDate = new Date(log.timestamp).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      if (window.confirm(`Are you sure you want to delete the ${log.type} record from ${formattedDate}? This action cannot be undone.`)) {
+        const updatedLogs = logs.filter(l => l.id !== logId);
+        setLogs(updatedLogs);
+        saveLogs(updatedLogs);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -90,11 +110,18 @@ function App() {
             </div>
             
             <div className="w-full max-w-2xl">
-              <AttendanceLog logs={logs} />
+              <AttendanceLog 
+                logs={logs} 
+                onDelete={handleDeleteLog}
+              />
             </div>
           </div>
         ) : (
-          <ReportsView logs={logs} onUpdateLog={handleUpdateLog} />
+          <ReportsView 
+            logs={logs} 
+            onUpdateLog={handleUpdateLog} 
+            onDeleteLog={handleDeleteLog}
+          />
         )}
       </main>
     </div>
