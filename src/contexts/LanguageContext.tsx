@@ -108,7 +108,7 @@ export const translations: Translations = {
   },
   clockOutMessage: {
     en: 'Are you sure you want to clock out? This will record your attendance end time.',
-    he: 'האם אתה בטוח שברצונך לדווח יצי��ה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
+    he: 'האם אתה בטוח שברצונך לדווח יציאה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
   },
   clockInTooltip: {
     en: 'Record your arrival time',
@@ -165,6 +165,26 @@ export const translations: Translations = {
   overtime: {
     en: 'overtime',
     he: 'שעות נוספות'
+  },
+  exportReports: {
+    en: 'Export Reports',
+    he: 'ייצוא דוחות'
+  },
+  exportToCSV: {
+    en: 'Export to CSV',
+    he: 'ייצוא ל-CSV'
+  },
+  exportToPDF: {
+    en: 'Export to PDF',
+    he: 'ייצוא ל-PDF'
+  },
+  exportSuccess: {
+    en: 'Report exported successfully',
+    he: 'הדוח יוצא בהצלחה'
+  },
+  exportError: {
+    en: 'Failed to export report',
+    he: 'ייצוא הדוח נכשל'
   }
 };
 
