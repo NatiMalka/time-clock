@@ -83,12 +83,14 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-indigo-950/40 rounded-lg shadow overflow-hidden">
         <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg font-medium text-gray-900">{t('recentActivity')}</h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            {t('recentActivity')}
+          </h3>
         </div>
         <AnimatePresence>
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-gray-200 dark:divide-indigo-900/50">
             {Object.entries(groupedLogs).map(([date, dateLogs]) => (
               <motion.div
                 key={date}
@@ -96,13 +98,15 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
-                className="divide-y divide-gray-100"
+                className="divide-y divide-gray-100 dark:divide-indigo-900/30"
               >
                 <button
                   onClick={() => setExpandedDate(expandedDate === date ? null : date)}
-                  className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between group"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-indigo-900/30 
+                    hover:bg-gray-100 dark:hover:bg-indigo-900/50 
+                    transition-colors flex items-center justify-between group"
                 >
-                  <h4 className="text-sm font-medium text-gray-500">
+                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-200">
                     {new Date(date).toLocaleDateString(language === 'he' ? 'he-IL' : 'en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -114,7 +118,8 @@ export function AttendanceLog({ logs, onDelete, isLoading = false }: AttendanceL
                     animate={{ rotate: expandedDate === date ? 90 : 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                    <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-300 
+                      group-hover:text-gray-600 dark:group-hover:text-white" />
                   </motion.div>
                 </button>
                 <AnimatePresence>

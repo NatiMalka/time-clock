@@ -1,6 +1,6 @@
 import { TimeLog } from '../types';
 
-export const STANDARD_HOURS_PER_DAY = 8.48;
+export const STANDARD_HOURS_PER_DAY = 8.8;
 export const OVERTIME_WARNING_THRESHOLD = 10; // hours per day
 
 export interface DailyStats {
@@ -76,4 +76,10 @@ export const calculateOvertime = (logs: TimeLog[]): OvertimeStats => {
     weeklyOvertime,
     monthlyOvertime
   };
+};
+
+export const formatHoursAndMinutes = (hours: number) => {
+  const wholeHours = Math.floor(hours);
+  const minutes = Math.round((hours - wholeHours) * 60);
+  return `${wholeHours}:${minutes.toString().padStart(2, '0')}`;
 };

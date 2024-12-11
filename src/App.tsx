@@ -212,7 +212,19 @@ function App() {
         ) : (
           <ReportsView 
             logs={logs} 
-            onUpdateLog={handleUpdateLog} 
+            onUpdateLog={(date, type, newTime) => {
+              const newLog: TimeLog = {
+                id: Date.now().toString(),
+                userId: '1',
+                type,
+                timestamp: newTime,
+                location: 'Main Office'
+              };
+              
+              const updatedLogs = [newLog, ...logs];
+              setLogs(updatedLogs);
+              saveLogs(updatedLogs);
+            }}
             onDeleteLog={handleDeleteLog}
             isLoading={isLoading}
           />

@@ -5,6 +5,7 @@ import { EditableDateTimeCell } from './EditableDateTimeCell';
 import { Clock, AlertCircle, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Tooltip } from '../ui/Tooltip';
 import { STANDARD_HOURS_PER_DAY } from '../../utils/attendanceUtils';
+import { ManualEntryForm } from '../attendance/ManualEntryForm';
 
 interface DailyReportProps {
   logs: TimeLog[];
@@ -21,6 +22,22 @@ interface DayStats {
 
 export default function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
   const { t } = useLanguage();
+  const { language } = useLanguage();
+
+  const formatDate = (date: Date) => {
+    if (language === 'he') {
+      return date.toLocaleDateString('he-IL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+    return date.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
 
   const calculateDailyStats = (): DayStats[] => {
     const dailyLogs = new Map<string, TimeLog[]>();
@@ -55,6 +72,10 @@ export default function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
   const dailyStats = calculateDailyStats();
   const totalDeficitHours = dailyStats.reduce((total, day) => total + day.hoursDeficit, 0);
 
+  const handleManualEntry = (entry: Omit<TimeLog, 'id'>) => {
+    onUpdateLog(new Date(entry.timestamp), entry.type, entry.timestamp);
+  };
+
   return (
     <div className="space-y-6">
       {/* סיכום שעות להשלמה */}
@@ -81,6 +102,25 @@ export default function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
         </div>
       )}
 
+      {/* טופס הוספה ידנית */}
+      <ManualEntryForm onSubmit={({ timestamp, type, clockIn, clockOut }) => {
+        if (type === 'clock-in') {
+          handleManualEntry({
+            type: 'clock-in',
+            timestamp: new Date(`${timestamp.toDateString()} ${clockIn}`),
+            location: 'Main Office'
+          });
+        }
+        
+        if (type === 'clock-out') {
+          handleManualEntry({
+            type: 'clock-out',
+            timestamp: new Date(`${timestamp.toDateString()} ${clockOut}`),
+            location: 'Main Office'
+          });
+        }
+      }} />
+
       {/* טבלת דוחות יומיים */}
       <div className="bg-white dark:bg-dark-800/50 backdrop-blur-sm border border-gray-200 dark:border-dark-700 rounded-lg shadow-sm">
         <div className="flex items-center gap-3 p-6 border-b border-gray-200 dark:border-dark-700">
@@ -95,7 +135,7 @@ export default function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
             <div key={day.date.toISOString()} className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-medium text-gray-900 dark:text-dark-50">
-                  {day.date.toLocaleDateString()}
+                  {formatDate(day.date)}
                 </h4>
                 
                 <div className="flex items-center gap-2">

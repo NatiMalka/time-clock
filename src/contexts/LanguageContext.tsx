@@ -108,7 +108,7 @@ export const translations: Translations = {
   },
   clockOutMessage: {
     en: 'Are you sure you want to clock out? This will record your attendance end time.',
-    he: 'האם אתה בטוח שברצונך לדווח יציאה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
+    he: 'האם אתה בטוח שברצונך לדווח יצי��ה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
   },
   clockInTooltip: {
     en: 'Record your arrival time',
@@ -213,6 +213,14 @@ export const translations: Translations = {
   totalHoursToComplete: {
     en: 'Total hours you need to complete',
     he: 'סך שעות שעליך להשלים'
+  },
+  addManualEntry: {
+    en: 'Add Manual Time Entry',
+    he: 'הוספת רישום זמן ידני'
+  },
+  addEntry: {
+    en: 'Add Entry',
+    he: 'הוסף רשומה'
   }
 };
 
