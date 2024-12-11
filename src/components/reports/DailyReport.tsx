@@ -3,68 +3,129 @@ import { TimeLog } from '../../types';
 import { calculateDailyStats } from '../../utils/attendanceUtils';
 import { formatDate } from '../../utils/dateUtils';
 import { Card, CardHeader, CardContent } from '../ui/Card';
-import { EditableTimeCell } from './EditableTimeCell';
+import { DateTimeEditor } from './DateTimeEditor';
+import { Edit2, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DailyReportProps {
   logs: TimeLog[];
   onUpdateLog: (date: Date, type: 'clock-in' | 'clock-out', newTime: Date) => void;
+  onDeleteLog: (logId: string) => void;
 }
 
-export function DailyReport({ logs, onUpdateLog }: DailyReportProps) {
+export function DailyReport({ logs, onUpdateLog, onDeleteLog }: DailyReportProps) {
+  const [editingLog, setEditingLog] = React.useState<{
+    date: Date;
+    type: 'clock-in' | 'clock-out';
+  } | null>(null);
+
   const dailyStats = calculateDailyStats(logs);
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900">Daily Reports</h3>
-          <span className="text-sm text-gray-500">Click time to edit</span>
-        </div>
+        <h3 className="text-lg font-medium text-gray-900">Daily Reports</h3>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Clock In
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Clock Out
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Hours Worked
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {dailyStats.map((day, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {formatDate(day.date)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <EditableTimeCell
-                      value={day.clockIn}
-                      onSave={(newTime) => onUpdateLog(day.date, 'clock-in', newTime)}
-                    />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <EditableTimeCell
-                      value={day.clockOut}
-                      onSave={(newTime) => onUpdateLog(day.date, 'clock-out', newTime)}
-                    />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {day.hoursWorked.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-6">
+          {dailyStats.map((day) => (
+            <div key={day.date.toISOString()} className="space-y-2">
+              <h4 className="font-medium text-gray-700">
+                {day.date.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="text-sm text-gray-500">Clock In</p>
+                      <p className="text-lg font-medium">
+                        {day.clockIn ? formatDate(day.clockIn) : '-'}
+                      </p>
+                    </div>
+                    {day.clockIn && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setEditingLog({
+                            date: day.date,
+                            type: 'clock-in'
+                          })}
+                          className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <AnimatePresence>
+                    {editingLog?.date.toDateString() === day.date.toDateString() && 
+                     editingLog.type === 'clock-in' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full left-0 right-0 mt-2 z-10"
+                      >
+                        <DateTimeEditor
+                          value={day.clockIn!}
+                          onChange={(newTime) => onUpdateLog(day.date, 'clock-in', newTime)}
+                          onClose={() => setEditingLog(null)}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                
+                <div className="relative">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="text-sm text-gray-500">Clock Out</p>
+                      <p className="text-lg font-medium">
+                        {day.clockOut ? formatDate(day.clockOut) : '-'}
+                      </p>
+                    </div>
+                    {day.clockOut && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setEditingLog({
+                            date: day.date,
+                            type: 'clock-out'
+                          })}
+                          className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <AnimatePresence>
+                    {editingLog?.date.toDateString() === day.date.toDateString() && 
+                     editingLog.type === 'clock-out' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full left-0 right-0 mt-2 z-10"
+                      >
+                        <DateTimeEditor
+                          value={day.clockOut!}
+                          onChange={(newTime) => onUpdateLog(day.date, 'clock-out', newTime)}
+                          onClose={() => setEditingLog(null)}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500">
+                Total Hours: {day.hoursWorked.toFixed(1)}
+              </p>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

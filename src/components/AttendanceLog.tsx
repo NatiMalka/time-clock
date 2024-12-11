@@ -1,7 +1,8 @@
 import React from 'react';
 import { TimeLog } from '../types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, ChevronRight } from 'lucide-react';
 import { ConfirmDialog } from './ui/ConfirmDialog';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface AttendanceLogProps {
   logs: TimeLog[];
@@ -10,6 +11,7 @@ interface AttendanceLogProps {
 
 export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
   const [deleteLogId, setDeleteLogId] = React.useState<string | null>(null);
+  const [expandedDate, setExpandedDate] = React.useState<string | null>(null);
 
   const handleDelete = (logId: string) => {
     setDeleteLogId(logId);
@@ -53,51 +55,85 @@ export function AttendanceLog({ logs, onDelete }: AttendanceLogProps) {
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
         </div>
-        <div className="divide-y divide-gray-200">
-          {Object.entries(groupedLogs).map(([date, dateLogs]) => (
-            <div key={date} className="divide-y divide-gray-100">
-              <div className="px-4 py-3 bg-gray-50">
-                <h4 className="text-sm font-medium text-gray-500">
-                  {new Date(date).toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </h4>
-              </div>
-              <ul>
-                {dateLogs.map((log) => {
-                  const { time } = formatDateTime(new Date(log.timestamp));
-                  return (
-                    <li key={log.id} className="px-4 py-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
-                            {log.type === 'clock-in' ? 'Clocked In' : 'Clocked Out'}
-                          </p>
-                          <p className="text-sm text-gray-500">{log.location}</p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <p className="text-sm text-gray-500">
-                            {time}
-                          </p>
-                          <button
-                            onClick={() => handleDelete(log.id)}
-                            className="text-gray-400 hover:text-rose-600 transition-colors"
-                            title="Delete entry"
+        <AnimatePresence>
+          <div className="divide-y divide-gray-200">
+            {Object.entries(groupedLogs).map(([date, dateLogs]) => (
+              <motion.div
+                key={date}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+                className="divide-y divide-gray-100"
+              >
+                <button
+                  onClick={() => setExpandedDate(expandedDate === date ? null : date)}
+                  className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between group"
+                >
+                  <h4 className="text-sm font-medium text-gray-500">
+                    {new Date(date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </h4>
+                  <motion.div
+                    animate={{ rotate: expandedDate === date ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {expandedDate === date && (
+                    <motion.ul
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      {dateLogs.map((log) => {
+                        const { time } = formatDateTime(new Date(log.timestamp));
+                        return (
+                          <motion.li
+                            key={log.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            className="px-4 py-4 hover:bg-gray-50 transition-colors"
                           >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
-        </div>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {log.type === 'clock-in' ? 'Clocked In' : 'Clocked Out'}
+                                </p>
+                                <p className="text-sm text-gray-500">{log.location}</p>
+                              </div>
+                              <div className="flex items-center space-x-4">
+                                <p className="text-sm text-gray-500">{time}</p>
+                                <motion.button
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={() => handleDelete(log.id)}
+                                  className="text-gray-400 hover:text-rose-600 transition-colors"
+                                  title="Delete entry"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </motion.button>
+                              </div>
+                            </div>
+                          </motion.li>
+                        );
+                      })}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatePresence>
       </div>
 
       <ConfirmDialog
