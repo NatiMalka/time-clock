@@ -93,6 +93,22 @@ export const translations: Translations = {
   attendanceClock: {
     en: 'Attendance Clock',
     he: 'שעון נוכחות'
+  },
+  confirmClockIn: {
+    en: 'Confirm Clock In',
+    he: 'אישור כניסה'
+  },
+  confirmClockOut: {
+    en: 'Confirm Clock Out',
+    he: 'אישור יציאה'
+  },
+  clockInMessage: {
+    en: 'Are you sure you want to clock in? This will record your attendance start time.',
+    he: 'האם אתה בטוח שברצונך לדווח כניסה? פעולה זו תתעד את זמן תחילת הנוכחות שלך.'
+  },
+  clockOutMessage: {
+    en: 'Are you sure you want to clock out? This will record your attendance end time.',
+    he: 'האם אתה בטוח שברצונך לדווח יציאה? פעולה זו תתעד את זמן סיום הנוכחות שלך.'
   }
 };
 
